@@ -1,0 +1,65 @@
+---
+title: " "
+---
+
+::::::: {style="text-align: center;"}
+## UNIVERSIDAD NACIONAL TORIBIO RODRÍGUEZ DE MENDOZA DE AMAZONAS
+
+![](https://upload.wikimedia.org/wikipedia/commons/9/95/Logo-2016-solo-ok.png){width="4.8cm"}
+
+## FACULTAD DE INGENIERÍA Y CIENCIAS AGRARIAS
+
+## ESCUELA PROFESIONAL DE INGENIERÍA AGRÓNOMA
+
+## Efecto del priming con agua de coco sobre la germinación y vigor de semillas de tarwi (*lupinus mutabilis*)
+
+
+<br>
+
+::: {style="text-align: center;"}
+# INTEGRANTES
+:::
+
+<br>
+
+| Integrante                      | \% de participación |
+|---------------------------------|---------------------|
+| Colunche Vásquez Josué Jhonatan | 100%                |
+| Chuquizuta Guelac Royber        | 100%                |
+| Hermes Galoc Valqui             | 100%                |
+| Mikey Didu Cubas Fernandez      | 100%                |
+| Segundo Bernabe Montano Salazar | 100%                |
+   
+
+::: {style="width: 60%; margin: auto; background-color: #f3f3f3; padding: 20px; border-radius: 12px; text-align: center; font-size: 18px;"}
+:::
+
+<br>
+
+::: {style="text-align: center;"}
+## DOCENTE
+
+Dr. Lozano Isla, Flavio
+
+<br>
+
+## CURSO
+
+Producción y Tecnología de Semillas
+
+<br>
+
+## CICLO ACADÉMICO
+
+2026 - I
+:::
+
+------------------------------------------------------------------------
+
+## Libro de Campo
+
+<https://docs.google.com/spreadsheets/d/1b5tTP1FB73wd4AelZuA07KTOUPhMMKfKJ-xiWMgslug/edit?gid=2136141581#gid=2136141581>
+
+## Etiquetas
+
+

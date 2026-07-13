@@ -1,0 +1,277 @@
+---
+title: "Analizar datos"
+author: "Josué"
+format:
+  html:
+    number-sections: true
+    toc: true         # (opcional) agrega tabla de contenido
+    toc-depth: 3      # (opcional) hasta qué nivel de títulos incluir
+editor: visual
+---
+
+# Cargar librerías
+
+```{r}
+
+source("https://inkaverse.com/setup.r")
+
+library(GerminaR)
+library(dplyr)
+library(ggplot2)
+library(GerminaR)
+library(knitr)
+
+```
+
+
+# Cargar datos
+
+```{r}
+
+gs <- "https://docs.google.com/spreadsheets/d/1b5tTP1FB73wd4AelZuA07KTOUPhMMKfKJ-xiWMgslug/edit?gid=2136141581#gid=2136141581" %>%
+  as_sheets_id()
+
+fb <- gs %>%
+  range_read("fb") %>%
+  mutate(
+    qrcode = as.character(qrcode),
+    plots = as.integer(plots),
+
+    c_h2o_coco = factor(c_h2o_coco),
+    T_remojo  = factor(t_remojo),
+
+    seeds = as.numeric(seeds),
+
+    across(starts_with("ger_"), as.numeric)
+  ) %>%
+  as.data.frame()
+
+
+```
+
+# FACTORES
+
+1. Tiempo de Remojo (t_remojo)
+2. concentracion de agua de coco (c_h2o).
+
+## VARIABLES
+
+1. germination percentage (GRP), 
+2. mean germination time (MGT), 
+3. germination speed (GSP)
+4. germination synchrony (GSY),
+
+# Resumen de germinación
+
+```{r}
+
+gsm <- ger_summary(
+  factors    = c("c_h2o_coco", "t_remojo"),
+  SeedN      = "seeds",
+  evalName   = "ger_",
+  cumulative = T,
+  data       = fb
+)
+
+gsm %>% kable()
+
+
+gsmx <- ger_summary(
+  factors    = c("c_h2o_coco", "t_remojo"),
+  SeedN      = "seeds",
+  evalName   = "ger_",
+  cumulative = T,
+  data       = fb
+) 
+ dt <- gsmx %>%
+  dplyr::select(c_h2o_coco,t_remojo, grp, mgt, gsp, syn) %>% 
+mutate(across(c(grp, mgt, gsp, syn), ~ ifelse(. == 0, NA, .)))
+ dt %>% kable()
+
+
+```
+
+# Objetivo específico 1
+
+Determinar el efecto del tiempo de remojo (8 y 12 h) y la concentración de agua de coco (100 %, 75 %, 50 %, 25 % y 0 %) sobre el porcentaje de germinación (GRP), el tiempo medio de germinación (MGT), la velocidad de germinación (GSP) y la sincronía de germinación (GSY) de semillas de tarwi.
+
+
+## Porcentaje de germinación (grp)
+
+**Modelo lineal mixto**
+
+$$grp = \mu + block + c_h2o + t_remojo + c_h2o*t_remojo + e$$
+
+### ANOVA de grp.
+
+```{r}
+library(car)
+
+# Asegurar que los factores estén definidos correctamente
+gsm$c_h2o_coco <- factor(gsm$c_h2o_coco)
+gsm$t_remojo   <- factor(gsm$t_remojo)
+
+# Contrastes para ANOVA Tipo III
+options(contrasts = c("contr.sum", "contr.poly"))
+
+# Modelo lineal
+md <- lm(
+  grp ~ c_h2o_coco * t_remojo,
+  data = gsm
+)
+# ANOVA Tipo III
+Anova(md, type = 3)
+
+
+```
+
+```{r}
+library(emmeans)
+library(multcomp)
+library(dplyr)
+library(inti)
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+md <- lm(
+  grp ~ c_h2o_coco * t_remojo,
+  data = gsm
+)
+
+```
+
+
+# Comparación de medias de la interacción c_h2o*t_remojo
+
+```{r}
+# Medias ajustadas de la interacción
+
+emm_grp <- emmeans(
+  md,
+  ~ c_h2o_coco:t_remojo
+)
+
+
+# Comparación Tukey
+
+comp_grp <- pairs(
+  emm_grp,
+  adjust = "tukey"
+)
+
+print(comp_grp)
+
+
+# Letras de significancia
+
+letras_grp <- multcomp::cld(
+  emm_grp,
+  adjust = "tukey",
+  Letters = letters
+) %>%
+  as.data.frame() %>%
+  mutate(
+    .group = trimws(.group)
+  )
+
+
+letras_grp
+
+
+# Gráfico
+
+letras_grp %>%
+  plot_smr(
+    x = "c_h2o_coco",
+    y = "emmean",
+    group = "t_remojo",
+    error = "SE",
+    sig = ".group",
+    xlab = "Concentración de agua de coco",
+    ylab = "Germinación (grp)"
+  )
+```
+
+
+## Tiempo medio de germinación (mgt)
+
+MODELO LINEAL
+
+$$mgt = \mu + block + c_h2o + t_remojo + c_h2o*t_remojo + e$$
+
+### ANOVA para mgt
+
+```{r}
+# MGT
+md.mgt <- lm(mgt ~ c_h2o_coco * t_remojo, data = gsm)
+Anova(md.mgt, type = 3)
+
+# ANOVA Tipo III
+Anova(md, type = 3)
+```
+
+
+### Comparación de medias
+
+
+
+### Gráfico de barras
+
+
+## Germination speed (GSP)
+
+MODELO LINEAL
+
+$$gsp = \mu + block + c_h2o + t_remojo + c_h2o*t_remojo + e$$
+
+### ANOVA para gsp
+
+```{r}
+# GSP
+md.gsp <- lm(gsp ~ c_h2o_coco * t_remojo, data = gsm)
+Anova(md.gsp, type = 3)
+```
+
+
+### Comparación de medias
+
+
+
+### Gráfico de barras
+
+
+
+## Germination synchrony (GSY),
+
+MODELO LINEAL
+
+$$syn = \mu + block + c_h2o + t_remojo + c_h2o*t_remojo + e$$
+
+### ANOVA para syn
+
+```{r}
+# GSY
+md.syn <- lm(syn ~ c_h2o_coco * t_remojo, data = gsm)
+Anova(md.syn, type = 3)
+```
+
+
+### Comparación de medias
+
+
+
+### Gráfico de barras
+
+
+
+# Objetivo 2
+
+Identificar accesiones de Chenopodium quinoa con mayor tolerancia al estrés salino mediante un análisis de componentes principales (PCA), utilizando las variables porcentaje de germinación (GRP), velocidad de germinación (GSP), sincronía (SYN) y tiempo medio de germinación (MGT).
+
+
+
+
+
+
+
+

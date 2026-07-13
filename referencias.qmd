@@ -1,0 +1,15 @@
+---
+title: "Referencias"
+---
+
+::: {style="text-align: justify;"}
+1. Devika, O. S., Singh, S., Sarkar, D., Barnwal, P., Suman, J., & Rakshit, A. (2021). Seed priming: A potential supplement in integrated resource management under fragile intensive ecosystems. Frontiers in Sustainable Food Systems, 5, Artículo 654001. <https://doi.org/10.3389/fsufs.2021.654001>
+
+2. Meneses Quelal, O., & Burbano Pulles, M. (2025). Nutritional, functional and microbiological potential of Andean Lupinus mutabilis and Amaranthus spp. in the development of healthy foods—A review. Foods, 14(12), 2059. <https://doi.org/10.3390/foods14122059>
+
+3. Ntshalintshali, S., Sibiya, S. G. P., Mabuza, N., Nkomo, M., & Buthelezi, L. G. (2025). Seed priming in legume crops: Mechanisms, applications and future directions for enhanced germination, growth and abiotic stress tolerance in sustainable agriculture: A review. Journal of Agronomy and Crop Science, 211(5), Artículo e70115. <https://doi.org/10.1111/jac.70115>
+
+4. Patiño Torres, C., Mosquera Gamboa, F., & González, R. T. (2011). Efecto inductor del agua de coco sobre la germinación de semillas y brotamiento de los cormos de la hierba de la equis Dracontium grayumianum. Acta Biológica Colombiana, 16(1), 133–148. <https://revistas.unal.edu.co/index.php/actabiol/article/view/12943>
+
+**FIGURA 1**
+:::

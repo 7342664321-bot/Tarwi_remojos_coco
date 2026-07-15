@@ -214,11 +214,78 @@ Anova(md, type = 3)
 ### Comparación de medias
 
 
+```{r}
+# Modelo MGT
+md_mgt <- lm(
+  mgt ~ c_h2o_coco * t_remojo,
+  data = gsm
+)
+
+
+# Medias ajustadas
+emm_mgt <- emmeans(
+  md_mgt,
+  ~ c_h2o_coco * t_remojo
+)
+
+
+# Letras Tukey
+letras_mgt <- multcomp::cld(
+  emm_mgt,
+  adjust = "tukey",
+  Letters = letters
+) %>%
+  as.data.frame() %>%
+  mutate(
+    .group = trimws(.group)
+  )
+
+
+letras_mgt
+```
+
 
 ### Gráfico de barras
 
+```{r}
+ggplot(letras_mgt,
+       aes(x=c_h2o_coco,
+           y=emmean,
+           fill=t_remojo))+
+  
+  geom_col(
+    position=position_dodge(0.9),
+    width=0.8
+  )+
+  
+  geom_errorbar(
+    aes(
+      ymin=emmean-SE,
+      ymax=emmean+SE
+    ),
+    width=0.2,
+    position=position_dodge(0.9)
+  )+
+  
+  geom_text(
+    aes(
+      label=.group,
+      y=emmean+SE+0.2
+    ),
+    position=position_dodge(0.9),
+    size=5
+  )+
+  
+  labs(
+    x="Concentración de agua de coco",
+    y="Tiempo medio de germinación (días)",
+    fill="Tiempo de remojo"
+  )+
+  
+  theme_classic()
+```
 
-## Germination speed (GSP)
+
 
 MODELO LINEAL
 
@@ -235,9 +302,73 @@ Anova(md.gsp, type = 3)
 
 ### Comparación de medias
 
+```{r}
+# Modelo GSP
+md_gsp <- lm(
+  gsp ~ c_h2o_coco * t_remojo,
+  data = gsm
+)
+
+
+emm_gsp <- emmeans(
+  md_gsp,
+  ~ c_h2o_coco * t_remojo
+)
+
+
+letras_gsp <- multcomp::cld(
+  emm_gsp,
+  adjust="tukey",
+  Letters=letters
+) %>%
+  as.data.frame() %>%
+  mutate(
+    .group=trimws(.group)
+  )
+
+
+letras_gsp
+```
 
 
 ### Gráfico de barras
+```{r}
+ggplot(letras_gsp,
+       aes(x=c_h2o_coco,
+           y=emmean,
+           fill=t_remojo))+
+  
+  geom_col(
+    position=position_dodge(0.9),
+    width=0.8
+  )+
+  
+  geom_errorbar(
+    aes(
+      ymin=emmean-SE,
+      ymax=emmean+SE
+    ),
+    width=0.2,
+    position=position_dodge(0.9)
+  )+
+  
+  geom_text(
+    aes(
+      label=.group,
+      y=emmean+SE+0.1
+    ),
+    position=position_dodge(0.9),
+    size=5
+  )+
+  
+  labs(
+    x="Concentración de agua de coco",
+    y="Velocidad de germinación (GSP)",
+    fill="Tiempo de remojo"
+  )+
+  
+  theme_classic()
+```
 
 
 
@@ -258,16 +389,132 @@ Anova(md.syn, type = 3)
 
 ### Comparación de medias
 
+```{r}
+# Modelo SYN
+md_syn <- lm(
+  syn ~ c_h2o_coco * t_remojo,
+  data = gsm
+)
+
+
+emm_syn <- emmeans(
+  md_syn,
+  ~ c_h2o_coco * t_remojo
+)
+
+
+letras_syn <- multcomp::cld(
+  emm_syn,
+  adjust="tukey",
+  Letters=letters
+) %>%
+  as.data.frame() %>%
+  mutate(
+    .group=trimws(.group)
+  )
+
+
+letras_syn
+```
 
 
 ### Gráfico de barras
 
+```{r}
+ggplot(letras_syn,
+       aes(x=c_h2o_coco,
+           y=emmean,
+           fill=t_remojo))+
+  
+  geom_col(
+    position=position_dodge(0.9),
+    width=0.8
+  )+
+  
+  geom_errorbar(
+    aes(
+      ymin=emmean-SE,
+      ymax=emmean+SE
+    ),
+    width=0.2,
+    position=position_dodge(0.9)
+  )+
+  
+  geom_text(
+    aes(
+      label=.group,
+      y=emmean+SE+0.05
+    ),
+    position=position_dodge(0.9),
+    size=5
+  )+
+  
+  labs(
+    x="Concentración de agua de coco",
+    y="Índice de sincronización (SYN)",
+    fill="Tiempo de remojo"
+  )+
+  
+  theme_classic()
+```
 
 
 # Objetivo 2
 
-Identificar accesiones de Chenopodium quinoa con mayor tolerancia al estrés salino mediante un análisis de componentes principales (PCA), utilizando las variables porcentaje de germinación (GRP), velocidad de germinación (GSP), sincronía (SYN) y tiempo medio de germinación (MGT).
+Identificar, mediante un análisis de componentes principales (PCA), las relaciones multivariadas entre GRP, MGT, GSP y GSY, y agrupar los tratamientos (individuos) según su similitud de respuesta germinativa, con el fin de determinar el tratamiento con el mejor desempeño global.
 
+```{r}
+## PCA
+
+# librerias 
+
+library(dplyr)
+library(tibble)
+library(FactoMineR)
+library(factoextra)
+library(cowplot)
+library(ggplot2)
+
+
+# BASE PARA PCA
+
+library(dplyr)
+library(dplyr)
+library(tidyr)
+library(tibble)
+
+dmv <- dt %>%
+  group_by(c_h2o_coco, t_remojo) %>%
+  summarise(
+    across(
+      c(grp, mgt, gsp, syn),
+      ~ mean(.x, na.rm = TRUE)
+    ),
+    .groups = "drop"
+  ) %>%
+  unite("tratamiento", c(c_h2o_coco, t_remojo), sep = "_", remove = FALSE) %>%
+  column_to_rownames("tratamiento")
+
+head(dmv)
+str(dmv)
+
+
+# PCA
+pca <- PCA(X = dmv, scale.unit = T
+           , quali.sup = c(1, 2))
+var <- plot(pca, choix = "var")
+ind <- plot(pca, choix = "ind")
+
+library(cowplot)
+
+list(var, ind) %>% 
+  plot_grid(plotlist = ., ncol = 2, labels = "auto")
+
+
+
+```
+
+```
 
 
 

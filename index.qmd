@@ -1,5 +1,5 @@
 ---
-title: "Inicio"
+title: "_"
 ---
 
 ::::::: {style="text-align: center;"}

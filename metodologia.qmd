@@ -3,66 +3,13 @@ title: "Materiales y Métodos"
 ---
 
 ::: {style="text-align: justify;"}
- con el fin de determinar el tratamiento con el mejor desempeño global.
+con el fin de determinar el tratamiento con el mejor desempeño global.
 
-# Materiales 
+# Materiales
+:::
 
-a)	Materiales de laboratorio
--	Papel toalla
--	Recipientes plásticos
--	Agua mineral
--	Etiquetas
--	Guantes
--	Pinzas
--	Pizeta
--	Probeta
--	Matraz
--	Cinta
-b)	Material biológico
--	Semillas de tarwi (Lupinus mutabilis L.)
+![](images/tarwi_2.png)
 
-# Metodología
+![](images/tarwi_3-01.png)
 
-a)	Recolección de semillas: 
-Las semillas de tarwi fueron en el mercado de Chachapoyas, de las cuales se seleccionaron 1000 semillas de tarwi con apariencia uniforme y sin daños visibles.
-
- 
-b)	Elaboración de etiquetas 
-Lo primero que se hizo es elaborar el libro de campo en la plataforma tarpuy y se registró en Google sheets, posteriormente, la información del diseño se importó a R para generar etiquetas usando el paquete huito, herramienta orientada a la elaboración reproducible de etiquetas y códigos QR. Cada etiqueta incorporó el nombre de ambos factores, el código de la unidad experimental, la concentración de agua de coco, el tiempo de remojo y la repetición, luego estas etiqueta fueron fijadas con cinta en cada recipiente, evitando el contacto con el sustrato húmedo.
-
-
-c)	Tratamientos 
-Se utilizó un diseño completamente al azar (DCA) con arreglo factorial 5 x 2. El primer factor fue la concentración de agua de coco, con cinco niveles: 0, 25, 75 y 100 % (v/v). el segundo factor fue el tiempo de remojo, con dos niveles: 6 y 12 horas. La combinación de ambos factores originó 10 tratamientos; cada tratamiento contó con cuatro repeticiones, para un total de 40 unidades experimentales. La unidad experimental estuvo constituida por un recipiente plástico acondicionado con papel toalla y 25 semillas.
-Tabla 1. Combinación factorial de los tratamientos de priming con agua de coco
-Tratamiento	Concentración de agua de coco (% v/v)	Tiempo de remojo (h)	Repeticiones
-T1	0	6	4
-T2	25	6	4
-T3	50	6	4
-T4	75	6	4
-T5	100	6	4
-T6	0	12	4
-T7	25	12	4
-T8	50	12	4
-T9	75	12	4
-T10	100	12	4
-
-d)	Preparación de las soluciones de agua de coco
-El agua de coco se obtuvo de frutos sanos y se recolectó en un deposito limpio. Antes de preparar las soluciones se homogeneizó suavemente para reducir diferencias dentro del volumen utilizado. Las concentraciones se expresaron en porcentaje volumen/volumen y se prepararon con agua destilada como diluyente. Los volúmenes se midieron dentro de una probeta y se mezclaron en un matraz. 
-
-Tabla 2. Preparación referencial de 100 mL de solución para cada concentración
-Concentración final	Agua de coco (mL)	Agua destilada (mL)	Volumen final (mL)
-0 %	0	100	100
-25 %	25	75	100
-50 %	50	50	100
-75 %	75	25	100
-100 %	100	0	100
-
-e)	Procedimiento
-
-1.	Acondicionamiento de los materiales: Se limpió el área de trabajo y se organizaron los recipientes, papel toalla, pinzas, guantes, probeta, matraz, agua destilada, agua mineral y soluciones de agua de coco
-2.	Distribución de las semillas: Después de la selección, las semillas se distribuyeron en cantidades iguales en las 40 unidades experimentales, respetando la asignación aleatoria del diseño 
-3.	Remojo de las semillas: Las semillas correspondientes a los tratamientos de 12 horas se colocaron en las cinco soluciones de agua de coco el 22 de junio de 2026 a las 18:30 y se retiraron el 23 de junio de 2026 a las 06:30 am. Por otra parte, Las semillas correspondientes a los tratamientos de 6 horas se colocaron en las cinco soluciones el 23 de junio de 2026 a las 12:30 am y se retiraron el mismo día a las 6:30 am.
-4.	Retiro de las semillas: al concluir el tiempo de remojo, las semillas se retiraron con pinzas y se dejaron escurrir durante un periodo breve y uniforme, evitando el lavado que 
-5.	Instalación en los recipientes. En cada recipiente se colocó papel toalla como sustrato. Las semillas se distribuyeron de manera separada y uniforme para facilitar el conteo y reducir el entrelazamiento de las raíces.
-6.	Mantenimiento de la humedad. Después del remojo, el papel toalla se humedeció únicamente con agua mineral mediante aplicaciones controladas. No se volvió a aplicar agua de coco durante el periodo de germinación. Se evitó el exceso de agua y el encharcamiento.
-7.	Evaluación diaria. Los recipientes se revisaron diariamente desde el día 0 hasta el día 8. Se consideró germinada una semilla cuando presentó emisión visible de la radícula. El número acumulado de semillas germinadas se registró por unidad experimental.
+![](images/clipboard-1967694027.png)

@@ -178,9 +178,8 @@ letras_grp <- multcomp::cld(
 letras_grp
 
 
-# Gráfico
-
-letras_grp %>%
+# Crear el gráfico
+grp <- letras_grp %>%
   plot_smr(
     x = "c_h2o_coco",
     y = "emmean",
@@ -188,8 +187,24 @@ letras_grp %>%
     error = "SE",
     sig = ".group",
     xlab = "Concentración de agua de coco",
-    ylab = "Germinación (grp)"
+    ylab = "Germinación (GRP)"
   )
+
+# Mostrar el gráfico
+grp
+
+
+```
+```{r}
+ggsave(
+  filename = "GRP_interaccion.png",
+  plot = grp,
+  width = 20,      # ancho en cm
+  height = 15,     # alto en cm
+  units = "cm",
+  dpi = 350,
+  bg = "white"
+)
 ```
 
 
@@ -209,27 +224,49 @@ Anova(md.mgt, type = 3)
 # ANOVA Tipo III
 Anova(md, type = 3)
 ```
-
-
-### Comparación de medias
-
-
+INTI:
 ```{r}
-# Modelo MGT
-md_mgt <- lm(
+library(emmeans)
+library(multcomp)
+library(dplyr)
+library(inti)
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+md <- lm(
   mgt ~ c_h2o_coco * t_remojo,
   data = gsm
 )
+```
+
+```{r}
+
+```
 
 
-# Medias ajustadas
+# Comparación de medias de la interacción c_h2o*t_remojo
+
+```{r}
+# Medias ajustadas de la interacción
+
 emm_mgt <- emmeans(
-  md_mgt,
-  ~ c_h2o_coco * t_remojo
+  md,
+  ~ c_h2o_coco:t_remojo
 )
 
 
-# Letras Tukey
+# Comparación Tukey
+
+comp_mgt <- pairs(
+  emm_mgt,
+  adjust = "tukey"
+)
+
+print(comp_mgt)
+
+
+# Letras de significancia
+
 letras_mgt <- multcomp::cld(
   emm_mgt,
   adjust = "tukey",
@@ -242,52 +279,42 @@ letras_mgt <- multcomp::cld(
 
 
 letras_mgt
+
+
+# Crear el gráfico
+mgt <- letras_mgt %>%
+  plot_smr(
+    x = "c_h2o_coco",
+    y = "emmean",
+    group = "t_remojo",
+    error = "SE",
+    sig = ".group",
+    xlab = "Concentración de agua de coco",
+    ylab = "Tiempo_m_germinación (mgt)"
+  )
+
+# Mostrar el gráfico
+mgt
+
+
 ```
-
-
-### Gráfico de barras
 
 ```{r}
-ggplot(letras_mgt,
-       aes(x=c_h2o_coco,
-           y=emmean,
-           fill=t_remojo))+
-  
-  geom_col(
-    position=position_dodge(0.9),
-    width=0.8
-  )+
-  
-  geom_errorbar(
-    aes(
-      ymin=emmean-SE,
-      ymax=emmean+SE
-    ),
-    width=0.2,
-    position=position_dodge(0.9)
-  )+
-  
-  geom_text(
-    aes(
-      label=.group,
-      y=emmean+SE+0.2
-    ),
-    position=position_dodge(0.9),
-    size=5
-  )+
-  
-  labs(
-    x="Concentración de agua de coco",
-    y="Tiempo medio de germinación (días)",
-    fill="Tiempo de remojo"
-  )+
-  
-  theme_classic()
+ggsave(
+  filename = "MGT_interaccion1.png",
+  plot = mgt,
+  width = 20,      # ancho en cm
+  height = 15,     # alto en cm
+  units = "cm",
+  dpi = 450,
+  bg = "white"
+)
 ```
 
-
-
 MODELO LINEAL
+
+Velocidad de germinacion (germination speed)
+
 
 $$gsp = \mu + block + c_h2o + t_remojo + c_h2o*t_remojo + e$$
 
@@ -299,77 +326,90 @@ md.gsp <- lm(gsp ~ c_h2o_coco * t_remojo, data = gsm)
 Anova(md.gsp, type = 3)
 ```
 
-
 ### Comparación de medias
 
+INTI:
 ```{r}
-# Modelo GSP
-md_gsp <- lm(
+library(emmeans)
+library(multcomp)
+library(dplyr)
+library(inti)
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+md <- lm(
   gsp ~ c_h2o_coco * t_remojo,
   data = gsm
 )
+```
 
+
+# Comparación de medias de la interacción c_h2o*t_remojo
+
+```{r}
+# Medias ajustadas de la interacción
 
 emm_gsp <- emmeans(
-  md_gsp,
-  ~ c_h2o_coco * t_remojo
+  md,
+  ~ c_h2o_coco:t_remojo
 )
 
 
+# Comparación Tukey
+
+comp_gsp <- pairs(
+  emm_gsp,
+  adjust = "tukey"
+)
+
+print(comp_gsp)
+
+
+# Letras de significancia
+
 letras_gsp <- multcomp::cld(
   emm_gsp,
-  adjust="tukey",
-  Letters=letters
+  adjust = "tukey",
+  Letters = letters
 ) %>%
   as.data.frame() %>%
   mutate(
-    .group=trimws(.group)
+    .group = trimws(.group)
   )
 
 
 letras_gsp
+
+
+# Crear el gráfico
+gsp <- letras_gsp %>%
+  plot_smr(
+    x = "c_h2o_coco",
+    y = "emmean",
+    group = "t_remojo",
+    error = "SE",
+    sig = ".group",
+    xlab = "Concentración de agua de coco",
+    ylab = "Velocidad_ger(gsp)"
+  )
+
+# Mostrar el gráfico
+gsp
+
+
 ```
 
-
-### Gráfico de barras
 ```{r}
-ggplot(letras_gsp,
-       aes(x=c_h2o_coco,
-           y=emmean,
-           fill=t_remojo))+
-  
-  geom_col(
-    position=position_dodge(0.9),
-    width=0.8
-  )+
-  
-  geom_errorbar(
-    aes(
-      ymin=emmean-SE,
-      ymax=emmean+SE
-    ),
-    width=0.2,
-    position=position_dodge(0.9)
-  )+
-  
-  geom_text(
-    aes(
-      label=.group,
-      y=emmean+SE+0.1
-    ),
-    position=position_dodge(0.9),
-    size=5
-  )+
-  
-  labs(
-    x="Concentración de agua de coco",
-    y="Velocidad de germinación (GSP)",
-    fill="Tiempo de remojo"
-  )+
-  
-  theme_classic()
+ggsave(
+  filename = "gsp_interaccion.png",
+  plot = gsp,
+  width = 20,      # ancho en cm
+  height = 15,     # alto en cm
+  units = "cm",
+  dpi = 450,
+  bg = "white"
+)
 ```
-
 
 
 ## Germination synchrony (GSY),
@@ -389,77 +429,91 @@ Anova(md.syn, type = 3)
 
 ### Comparación de medias
 
+INTI:
 ```{r}
-# Modelo SYN
-md_syn <- lm(
+library(emmeans)
+library(multcomp)
+library(dplyr)
+library(inti)
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+md <- lm(
   syn ~ c_h2o_coco * t_remojo,
   data = gsm
 )
+```
 
+
+# Comparación de medias de la interacción c_h2o*t_remojo
+
+```{r}
+# Medias ajustadas de la interacción
 
 emm_syn <- emmeans(
-  md_syn,
-  ~ c_h2o_coco * t_remojo
+  md,
+  ~ c_h2o_coco:t_remojo
 )
 
 
+# Comparación Tukey
+
+comp_syn <- pairs(
+  emm_syn,
+  adjust = "tukey"
+)
+
+print(comp_syn)
+
+
+# Letras de significancia
+
 letras_syn <- multcomp::cld(
   emm_syn,
-  adjust="tukey",
-  Letters=letters
+  adjust = "tukey",
+  Letters = letters
 ) %>%
   as.data.frame() %>%
   mutate(
-    .group=trimws(.group)
+    .group = trimws(.group)
   )
 
 
 letras_syn
+
+
+# Crear el gráfico
+syn <- letras_syn %>%
+  plot_smr(
+    x = "c_h2o_coco",
+    y = "emmean",
+    group = "t_remojo",
+    error = "SE",
+    sig = ".group",
+    xlab = "Concentración de agua de coco",
+    ylab = "Syncronia_germinación (syn)"
+  )
+
+# Mostrar el gráfico
+syn
+
+
 ```
-
-
-### Gráfico de barras
-
 ```{r}
-ggplot(letras_syn,
-       aes(x=c_h2o_coco,
-           y=emmean,
-           fill=t_remojo))+
-  
-  geom_col(
-    position=position_dodge(0.9),
-    width=0.8
-  )+
-  
-  geom_errorbar(
-    aes(
-      ymin=emmean-SE,
-      ymax=emmean+SE
-    ),
-    width=0.2,
-    position=position_dodge(0.9)
-  )+
-  
-  geom_text(
-    aes(
-      label=.group,
-      y=emmean+SE+0.05
-    ),
-    position=position_dodge(0.9),
-    size=5
-  )+
-  
-  labs(
-    x="Concentración de agua de coco",
-    y="Índice de sincronización (SYN)",
-    fill="Tiempo de remojo"
-  )+
-  
-  theme_classic()
+ggsave(
+  filename = "syn_interaccion.png",
+  plot = syn,
+  width = 20,      # ancho en cm
+  height = 15,     # alto en cm
+  units = "cm",
+  dpi = 450,
+  bg = "white"
+)
 ```
-
 
 # Objetivo 2
+
+## PCA
 
 Identificar, mediante un análisis de componentes principales (PCA), las relaciones multivariadas entre GRP, MGT, GSP y GSY, y agrupar los tratamientos (individuos) según su similitud de respuesta germinativa, con el fin de determinar el tratamiento con el mejor desempeño global.
 
@@ -510,13 +564,103 @@ library(cowplot)
 list(var, ind) %>% 
   plot_grid(plotlist = ., ncol = 2, labels = "auto")
 
+# mostrar 
+# Guardar el gráfico combinado en un objeto
+pca_plot <- plot_grid(
+  plotlist = list(var, ind),
+  ncol = 2,
+  labels = "AUTO"
+)
+
+# Mostrar el gráfico
+pca_plot
 
 
 ```
 
+
+```{r}
+ggsave(
+  filename = "PCA.png",
+  plot = pca_plot,
+  width = 20,      # ancho en cm
+  height = 15,     # alto en cm
+  units = "cm",
+  dpi = 450,
+  bg = "white"
+)
 ```
 
 
+```{r}
+#===========================================
+# PCA
+#===========================================
+
+library(FactoMineR)
+library(factoextra)
+library(cowplot)
+library(ggplot2)
+
+# PCA
+pca <- PCA(
+  X = dmv,
+  scale.unit = TRUE,
+  quali.sup = c(1,2),
+  graph = FALSE
+)
+
+#-------------------------------------------
+# Variables
+#-------------------------------------------
+
+var <- fviz_pca_var(
+  pca,
+  col.var = "cos2",
+  gradient.cols = c("#7570b3",
+                    "#d95f02",
+                    "#e7298a",
+                    "#1b9e77",
+                    "#66a61e"),
+  repel = TRUE
+)
+
+#-------------------------------------------
+# Tratamientos
+#-------------------------------------------
+
+ind <- fviz_pca_ind(
+  pca,
+  geom = "point",
+  habillage = dmv$t_remojo,
+  addEllipses = TRUE,
+  repel = TRUE
+)
+
+#-------------------------------------------
+# Figura combinada
+#-------------------------------------------
+
+pca1_plot <- plot_grid(
+  var,
+  ind,
+  ncol = 2,
+  labels = "AUTO"
+)
+
+pca1_plot
+```
+```{r}
+ggsave(
+  filename = "PCA1.png",
+  plot = pca1_plot,
+  width = 20,      # ancho en cm
+  height = 15,     # alto en cm
+  units = "cm",
+  dpi = 450,
+  bg = "white"
+)
+```
 
 
 
